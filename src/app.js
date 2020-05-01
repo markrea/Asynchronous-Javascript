@@ -12,7 +12,7 @@ app.get('/', mainController);
 
 app.get('/jokes', jokesController);
 
-app.get('/joke/random', randomController);
+app.get('/jokes/random', randomController);
 
 app.get('/joke/random/personal/:first/:last', personalController);
 
