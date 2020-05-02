@@ -13,7 +13,26 @@ const mockJokeList = {
     },
   ],
 };
+const mockRandomJoke = {
+  type: 'success',
+  value: {
+    id: 115,
+    joke: 'i am a random joke',
+    categories: [],
+  },
+};
+
+const mockPersonalJoke = {
+  type: 'success',
+  value: {
+    id: 141,
+    joke: 'random joke about manchester codes',
+    categories: [],
+  },
+};
 
 module.exports = {
   mockJokeList,
+  mockRandomJoke,
+  mockPersonalJoke,
 };
