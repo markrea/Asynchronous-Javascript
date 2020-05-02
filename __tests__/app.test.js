@@ -4,56 +4,29 @@
 const request = require('supertest');
 const nock = require('nock');
 const app = require('../src/app');
+const { mockJokeList } = require('../data/test-data');
 
 describe('GET / - Homepage', () => {
-  it('should respond with some homepage markup', done => {
+  it('should respond with some homepage markup', async () => {
     request(app)
       .get('/')
       .then(res => {
         expect(res.statusCode).toEqual(200);
         expect(res.text).toContain('Hello, Welcome to my jokes API!');
-        done();
       });
   });
 });
 describe('GET /jokes', () => {
-  it('GET / should respond with a list of jokes', done => {
-    const mockResponse = {
-      type: 'success',
-      value: [
-        {
-          id: 1,
-          joke: 'i am a joke',
-          categories: [],
-        },
-        {
-          id: 2,
-          joke: 'i am another joke',
-          categories: [],
-        },
-      ],
-    };
+  it('GET / should respond with a list of jokes', async () => {
     nock('https://api.icndb.com')
       .get('/jokes')
-      .reply(200, mockResponse);
+      .reply(200, mockJokeList);
 
     request(app)
       .get('/jokes')
       .then(res => {
         expect(res.statusCode).toEqual(200);
-        expect(res.body.jokes).toEqual([
-          {
-            categories: [],
-            id: 1,
-            joke: 'i am a joke',
-          },
-          {
-            categories: [],
-            id: 2,
-            joke: 'i am another joke',
-          },
-        ]);
-        done();
+        expect(res.body.jokes).toEqual(mockJokeList.value);
       });
   });
   it('should respond with an error message if something goes wrong', done => {
