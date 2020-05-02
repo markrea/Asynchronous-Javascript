@@ -10,7 +10,7 @@ const mainController = (req, res) =>
 const jokesController = (req, res) =>
   request('https://api.icndb.com/jokes', (error, jokesApiResponse) => {
     if (error) {
-      console.log(error);
+      return res.status(error.statusCode).send({ error: error.message });
     }
     const parsedResponse = JSON.parse(jokesApiResponse.body);
 
@@ -21,9 +21,7 @@ const randomController = (req, res) =>
   axios
     .get('https://api.icndb.com/jokes/random?exclude=[explicit]')
     .then(response => res.send({ randomJoke: response.data.value }))
-    .catch(error => {
-      console.log(error);
-    });
+    .catch(error => res.status(error.statusCode).send({ error: error.message }));
 
 
 const personalController = async (req, res) => {
@@ -36,7 +34,7 @@ const personalController = async (req, res) => {
 
     return res.send({ personalJoke: response.data.value });
   } catch (error) {
-    console.log(error);
+     return res.status(error.statusCode).send({ error: error.message });
   }
 };
 
