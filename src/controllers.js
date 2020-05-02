@@ -1,5 +1,3 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
-const request = require('request');
 const axios = require('axios');
 
 const mainController = (req, res) =>
@@ -8,14 +6,10 @@ const mainController = (req, res) =>
   });
 
 const jokesController = (req, res) =>
-  request('https://api.icndb.com/jokes', (error, jokesApiResponse) => {
-    if (error) {
-      return res.status(error.statusCode).send({ error: error.message });
-    }
-    const parsedResponse = JSON.parse(jokesApiResponse.body);
-
-    res.send({ jokes: parsedResponse.value });
-  });
+  axios
+    .get('https://api.icndb.com/jokes')
+    .then(response => res.send({ jokes: response.data.value }))
+    .catch(error => res.status(error.statusCode).send({ error: error.message }));
 
 const randomController = (req, res) =>
   axios
@@ -27,15 +21,13 @@ const randomController = (req, res) =>
 const personalController = async (req, res) => {
   const { first, last } = req.params;
 
-  try {
-    const response = await axios.get(
+  return axios
+    .get(
       `https://api.icndb.com/jokes/random?firstName=${first}&lastName=${last}&exclude=[explicit]`,
-    );
+    )
 
-    return res.send({ personalJoke: response.data.value });
-  } catch (error) {
-     return res.status(error.statusCode).send({ error: error.message });
-  }
+    .then(response => res.send({ personalJoke: response.data.value }))
+    .catch(error => res.status(error.statusCode).send({ error: error.message }));
 };
 
 module.exports = {
